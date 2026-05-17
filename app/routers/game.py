@@ -4,7 +4,7 @@ from sqlalchemy.orm import Session
 from app.dependencies import get_db
 from app.schemas.game import GameCreate, Game, GamePut
 
-from app.services.GameService import GameService
+from app.services.game_service import GameService
 
 router = APIRouter(prefix="/games", tags=["games"])
 

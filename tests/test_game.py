@@ -25,6 +25,12 @@ def seed_db_with_game(client: TestClient):
     return response
 
 
+# TODO
+@pytest.fixture
+def clear_db(client: TestClient):
+    yield
+
+
 # review later
 def test_create_game(client: TestClient):
     game_data = {
