@@ -1,9 +1,11 @@
 from datetime import date
 from typing import Optional, List
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, ConfigDict, Field
 
 
 class GameBase(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
     title: str = Field(
         ...,
         min_length=1,

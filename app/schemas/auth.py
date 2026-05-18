@@ -1,8 +1,10 @@
 from typing import Optional
-from pydantic import BaseModel, Field, EmailStr
+from pydantic import BaseModel, ConfigDict, Field, EmailStr
 
 
 class UserPublic(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
     username: str = Field(..., min_length=3, max_length=20, examples=["abcuser"])
     full_name: Optional[str] = Field(..., examples=["John Doe"])
     email: EmailStr = Field(..., examples=["abc@gmail.com"])
