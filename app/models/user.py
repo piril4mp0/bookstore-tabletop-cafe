@@ -13,4 +13,6 @@ class User:
     )
     username: Mapped[str]
     email: Mapped[str]
-    hashed_password: Mapped[str]
+    password: Mapped[str]
+    full_name: Mapped[str] = mapped_column(nullable=True)
+

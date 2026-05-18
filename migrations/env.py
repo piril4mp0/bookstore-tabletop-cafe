@@ -6,6 +6,8 @@ from app.core.settings import settings
 from app.db.database import table_registry
 from alembic import context
 from app.models.game import Game
+from app.models.user import User
+
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.

@@ -10,7 +10,6 @@ class GameService:
     @staticmethod
     def save_game(db: Session, game: GameCreate) -> GameModel:
         """Saves a game to the database
-        _summary_
 
         Args:
             db (Session): _description_
@@ -30,8 +29,7 @@ class GameService:
     @staticmethod
     def get_games(db: Session, genre: str | None = None) -> list[GameModel]:
         """Gets all games from the database
-        _summary_
-
+        
         Args:
             db (Session): _description_
             genre (str | None, optional): _description_. Defaults to None.
@@ -47,8 +45,7 @@ class GameService:
     @staticmethod
     def get_game_by_id(db: Session, id: int) -> GameModel | None:
         """Gets a game from the database by id
-        _summary_
-
+        
         Args:
             db (Session): _description_
             id (int): _description_

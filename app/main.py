@@ -8,3 +8,4 @@ app = FastAPI()
 
 app.include_router(games_router)
 app.include_router(auth_router)
+

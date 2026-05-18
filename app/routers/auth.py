@@ -15,7 +15,7 @@ router = APIRouter(prefix="/auth", tags=["login"])
 
 @router.post("/login", response_model=Token, status_code=HTTPStatus.OK)
 def user_login(user: UserLogin, db: Session = Depends(get_db)):
-    AuthService.login(user, db)
+    return AuthService.login(user, db)
 
 
 @router.post("/signup", response_model=UserModel, status_code=HTTPStatus.CREATED)

@@ -21,8 +21,7 @@ pwd_context = PasswordHash.recommended()
 class AuthService:
     @staticmethod
     def create_access_token(data: dict) -> str:
-        """Creates an access token for the user
-        _summary_
+        """<Utilitary Method> Creates an access token for the user
         Args:
             data (dict): _description_
 
@@ -39,8 +38,7 @@ class AuthService:
 
     @staticmethod
     def get_password_hash(password: str) -> str:
-        """Returns a hashed version of the password
-        _summary_
+        """<Utilitary Method> Returns a hashed version of the password
 
         Args:
             password (str): _description_
@@ -53,7 +51,6 @@ class AuthService:
     @staticmethod
     def verify_password(plain_password: str, hashed_password: str) -> bool:
         """Verifies if the plain password matches the hashed password
-        _summary_
         Args:
             plain_password (str): _description_
             hashed_password (str): _description_
@@ -65,10 +62,30 @@ class AuthService:
 
     @staticmethod
     def hash_password(plain_password) -> str:
+        """<Utilitary Method> Hashes a given password
+
+        Args:
+            plain_password (_type_): _description_
+
+        Returns:
+            str: _description_
+        """
         return pwd_context.hash(plain_password)
 
     @staticmethod
     def register_user(user: UserCreate, db: Session):
+        """Registers a new user into the DB
+
+        Args:
+            user (UserCreate): _description_
+            db (Session): _description_
+
+        Raises:
+            HTTPException: User with this email already exists
+
+        Returns:
+            _type_: _description_
+        """
         query = select(UserModel).where(UserModel.email == user.email)
         user_exists = db.execute(query).scalar_one_or_none()
         if user_exists:
@@ -84,13 +101,26 @@ class AuthService:
 
     @staticmethod
     def login(user_login: UserLogin, db: Session) -> Token:
-        query = select(UserModel).where(UserModel.email == email)
+        """Login method. If the login is successful, return a Bearer Token
+
+        Args:
+            user_login (UserLogin): _description_
+            db (Session): _description_
+
+        Raises:
+            HTTPException: Invalid email or password
+            HTTPException: Invalid email or password
+
+        Returns:
+            Token: _description_
+        """
+        query = select(UserModel).where(UserModel.email == user_login.email)
         user = db.execute(query).scalar_one_or_none()
         if not user:
             raise HTTPException(
                 status_code=HTTPStatus.UNAUTHORIZED, detail="Invalid email or password"
             )
-        if not AuthService.verify_password(user_login.password, user.hashed_password):
+        if not AuthService.verify_password(user_login.password, user.password):
             raise HTTPException(
                 status_code=HTTPStatus.UNAUTHORIZED, detail="Invalid email or password"
             )
