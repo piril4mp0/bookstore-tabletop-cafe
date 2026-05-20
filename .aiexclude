@@ -1,0 +1,17 @@
+# ignore .env
+
+.env
+
+# ignore
+
+.venv
+
+# caches
+
+**pycache**/
+.pytest_cache/
+\*.pyc
+
+# lock
+
+uv.lock
