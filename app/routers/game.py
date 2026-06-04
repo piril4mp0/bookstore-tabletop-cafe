@@ -4,7 +4,7 @@ from sqlalchemy.orm import Session
 from app.dependencies import get_db, get_current_admin_user
 from app.schemas.game import GameCreate, Game, GamePut
 
-from app.services.game_service import GameService
+from app.services.game import GameService
 from app.models.user import User as UserModel
 
 router = APIRouter(prefix="/games", tags=["games"])
@@ -13,9 +13,9 @@ router = APIRouter(prefix="/games", tags=["games"])
 ### Creates a new Game ###
 @router.post("/", response_model=Game, status_code=HTTPStatus.CREATED)
 def create_new_game(
-    new_game: GameCreate = Body(), 
-    db: Session = Depends(get_db), 
-    current_user: UserModel = Depends(get_current_admin_user)
+    new_game: GameCreate = Body(),
+    db: Session = Depends(get_db),
+    current_user: UserModel = Depends(get_current_admin_user),
 ):
     return GameService.save_game(db, new_game)
 
