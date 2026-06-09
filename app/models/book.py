@@ -1,3 +1,4 @@
+from typing import Optional
 from app.db.database import table_registry
 from sqlalchemy import String
 from sqlalchemy.dialects.postgresql import ARRAY
@@ -17,15 +18,14 @@ class Book:
     - isbn: The unique 10 or 13 character ISBN of the book.
     - stock: The current inventory stock level.
     """
-
     __tablename__ = "books"
     id: Mapped[int] = mapped_column(
         init=False, primary_key=True, autoincrement=True, unique=True
     )
     isbn: Mapped[str] = mapped_column(String(13), unique=True, nullable=False)
-    title: Mapped[str] = mapped_column(String(255), nullable=False)
-    pages: Mapped[int] = mapped_column(nullable=False)
-    authors: Mapped[list[str]] = mapped_column(ARRAY(String(255)), nullable=False)
-    year_released: Mapped[int] = mapped_column(nullable=False)
-    synopsis: Mapped[str] = mapped_column(String(1000), nullable=False)
+    title: Mapped[Optional[str]] = mapped_column(String(255), nullable=True, default=None)
+    pages: Mapped[Optional[int]] = mapped_column(nullable=True, default=None)
+    authors: Mapped[Optional[list[str]]] = mapped_column(ARRAY(String(255)), nullable=True, default=None)
+    year_released: Mapped[Optional[str]] = mapped_column(String(100), nullable=True, default=None)
+    synopsis: Mapped[Optional[str]] = mapped_column(String(1000), nullable=True, default="No Synopsis Available")
     stock: Mapped[int] = mapped_column(default=0, nullable=False)

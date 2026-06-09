@@ -8,8 +8,8 @@ from sqlalchemy.orm import Session
 from app.core.settings import settings
 from pwdlib import PasswordHash
 from app.schemas.auth import Token, UserCreate, UserLogin
-from app.models.user import User as UserModel  # Ensure this model exists
-
+from app.models.user import User as UserModel
+import logging
 from jwt import encode
 
 SECRET_KEY = settings.SECRET_KEY

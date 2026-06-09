@@ -16,9 +16,9 @@ def get_db():
     db = SessionLocal()
     try:
         yield db
-    except SQLAlchemyError:
+    except SQLAlchemyError as e:
         db.rollback()
-        raise SQLAlchemyError("Erro ao realizar operação no banco de dados")
+        raise e
     except Exception:
         db.rollback()
         raise
@@ -36,7 +36,7 @@ def get_current_user(db: Session = Depends(get_db), token: str = Depends(oauth2_
     
     try:
         # Assuming you store the user's email or username in the "sub" claim
-        payload = jwt.decode(token, settings.SECRET_KEY, algorithms=[settings.ALGORITHM])
+        payload = jwt.decode(token, settings.SECRET_KEY, algorithms=[settings.JWT_ALGORITHM])
         payload_email: str = payload.get("sub")
         if payload_email is None:
             raise credentials_exception

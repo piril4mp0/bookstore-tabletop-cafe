@@ -2,6 +2,10 @@ from typing import Optional, List
 from pydantic import BaseModel, Field
 
 
+class IncreaseBookStock(BaseModel):
+    stock: int = Field(..., description="Stock to increase", example=10)
+
+
 class BookBase(BaseModel):
     isbn: str = Field(
         ...,
@@ -10,20 +14,20 @@ class BookBase(BaseModel):
         description="The ISBN of the book",
         example="9780261103283"
     )
-    title: str = Field(
-        ..., 
+    title: Optional[str] = Field(
+        None, 
         max_length=255, 
         description="The title of the book", 
         example="The Hobbit"
     )
-    pages: int = Field(
-        ..., gt=0, description="Number of pages in the book", example=310
+    pages: Optional[int] = Field(
+        None, gt=0, description="Number of pages in the book", example=310
     )
-    authors: List[str] = Field(
-        ..., description="List of authors", example=["J.R.R. Tolkien"]
+    authors: Optional[List[str]] = Field(
+        None, description="List of authors", example=["J.R.R. Tolkien"]
     )
-    year_released: int = Field(
-        ..., description="The year the book was released", example=1937
+    year_released: Optional[str] = Field(
+        None, description="The year the book was released", example="1937"
     )
     stock: int = Field(default=0, ge=0, description="Current physical stock of the book")
 
@@ -41,7 +45,7 @@ class BookPut(BaseModel):
     title: Optional[str] = Field(None, max_length=255, description="The title of the book")
     pages: Optional[int] = Field(None, gt=0, description="Number of pages in the book")
     authors: Optional[List[str]] = Field(None, description="List of authors")
-    year_released: Optional[int] = Field(None, description="The year the book was released")
+    year_released: Optional[str] = Field(None, description="The year the book was released")
     stock: Optional[int] = Field(None, ge=0, description="Current physical stock of the book")
 
 
