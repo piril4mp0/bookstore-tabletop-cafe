@@ -17,7 +17,7 @@ class BookService:
                 status_code=409,
                 detail=f"Book ISBN: {book.isbn} already exists in the database.",
             )
-        new_book: Book = await fetch_book_from_open_library(book.isbn)
+        new_book: Book = await fetch_book_from_open_library(book.isbn, book.stock)
         db.add(new_book)
         db.commit()
         db.refresh(new_book)
