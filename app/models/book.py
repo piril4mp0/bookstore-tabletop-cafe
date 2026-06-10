@@ -1,7 +1,7 @@
 from typing import Optional
 from app.db.database import table_registry
-from sqlalchemy import String
-from sqlalchemy.dialects.postgresql import ARRAY
+from sqlalchemy import String, JSON
+from sqlalchemy.dialects import postgresql
 from sqlalchemy.orm import Mapped, mapped_as_dataclass, mapped_column
 
 
@@ -25,7 +25,9 @@ class Book:
     isbn: Mapped[str] = mapped_column(String(13), unique=True, nullable=False)
     title: Mapped[Optional[str]] = mapped_column(String(255), nullable=True, default=None)
     pages: Mapped[Optional[int]] = mapped_column(nullable=True, default=None)
-    authors: Mapped[Optional[list[str]]] = mapped_column(ARRAY(String(255)), nullable=True, default=None)
+    authors: Mapped[Optional[list[str]]] = mapped_column(
+        postgresql.ARRAY(String(255)).with_variant(JSON, "sqlite"), nullable=True, default=None
+    )
     year_released: Mapped[Optional[str]] = mapped_column(String(100), nullable=True, default=None)
     synopsis: Mapped[Optional[str]] = mapped_column(String(1000), nullable=True, default="No Synopsis Available")
     stock: Mapped[int] = mapped_column(default=0, nullable=False)

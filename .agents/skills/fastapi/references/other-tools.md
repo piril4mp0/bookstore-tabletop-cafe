@@ -1,4 +1,4 @@
-# Other Tools
+git pull# Other Tools
 
 ## uv
 
