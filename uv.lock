@@ -99,12 +99,12 @@ dependencies = [
     { name = "psycopg", extra = ["binary"] },
     { name = "pwdlib", extra = ["argon2"] },
     { name = "pyjwt" },
-    { name = "pytest" },
     { name = "sqlalchemy" },
 ]
 
 [package.dev-dependencies]
 dev = [
+    { name = "pytest" },
     { name = "ruff" },
 ]
 
@@ -115,12 +115,14 @@ requires-dist = [
     { name = "psycopg", extras = ["binary"], specifier = ">=3.3.4" },
     { name = "pwdlib", extras = ["argon2"], specifier = ">=0.3.0" },
     { name = "pyjwt", specifier = ">=2.12.1" },
-    { name = "pytest", specifier = ">=9.0.3" },
     { name = "sqlalchemy", specifier = ">=2.0.49" },
 ]
 
 [package.metadata.requires-dev]
-dev = [{ name = "ruff", specifier = ">=0.15.13" }]
+dev = [
+    { name = "pytest", specifier = ">=9.0.3" },
+    { name = "ruff", specifier = ">=0.15.13" },
+]
 
 [[package]]
 name = "certifi"
