@@ -1,5 +1,5 @@
 from app.models.book import Book
-from app.schemas.book import BookCreate, BookImport, BookPut
+from app.schemas.book import BookImport, BookPut
 from app.integrations.open_library import fetch_book_from_open_library
 from sqlalchemy import select
 from sqlalchemy.orm import Session

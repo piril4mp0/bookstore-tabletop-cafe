@@ -2,7 +2,6 @@ from http import HTTPStatus
 import pytest
 import uuid
 from fastapi.testclient import TestClient
-from app.main import app
 from tests.constants import *
 
 @pytest.mark.core

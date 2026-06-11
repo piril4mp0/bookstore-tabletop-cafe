@@ -1,7 +1,5 @@
-from datetime import datetime
 from app.db.database import table_registry
-from sqlalchemy import String, text
-from sqlalchemy.dialects.postgresql import ARRAY
+from sqlalchemy import text
 from sqlalchemy.orm import Mapped, mapped_as_dataclass, mapped_column
 
 

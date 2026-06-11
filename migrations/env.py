@@ -5,9 +5,6 @@ from sqlalchemy import pool
 from app.core.settings import settings
 from app.db.database import table_registry
 from alembic import context
-from app.models.game import Game
-from app.models.user import User
-from app.models.book import Book
 
 
 # this is the Alembic Config object, which provides
