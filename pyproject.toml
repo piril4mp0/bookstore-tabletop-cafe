@@ -49,6 +49,7 @@ exclude = [
     "site-packages",
     "venv",
     "migrations",
+    ".agents"
 ]
 
 
