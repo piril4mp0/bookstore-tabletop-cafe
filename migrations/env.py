@@ -1,11 +1,15 @@
 from logging.config import fileConfig
 
-from sqlalchemy import engine_from_config
-from sqlalchemy import pool
+from alembic import context
+from sqlalchemy import engine_from_config, pool
+
 from app.core.settings import settings
 from app.db.database import table_registry
-from alembic import context
-
+from app.models.book import Book  # noqa: F401
+from app.models.game import Game  # noqa: F401
+from app.models.menu import MenuItem, menu_item_tags  # noqa: F401
+from app.models.tag import Tag  # noqa: F401
+from app.models.user import User  # noqa: F401
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.

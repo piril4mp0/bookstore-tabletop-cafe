@@ -49,6 +49,31 @@ Bookstore Tabletop Cafe is an async FastAPI backend system for managing a combin
   - `release_date`: `datetime`
   - `players`: `int`
 
+### 4. Tag Management ([app/models/tag.py](file:///c:/projects/bookstore-tabletop-cafe/app/models/tag.py))
+- **Table**: `tags`
+- **Fields**:
+  - `id`: Primary key (autoincrement)
+  - `name`: `str` (50 chars, unique, required)
+
+### 5. Menu Items ([app/models/menu.py](file:///c:/projects/bookstore-tabletop-cafe/app/models/menu.py))
+- **Table**: `menu_items` (and association table `menu_item_tags`)
+- **Fields**:
+  - `id`: Primary key (autoincrement)
+  - `name`: `str` (255 chars, unique, required)
+  - `category`: `str` (`"drink"` or `"meal"`, required)
+  - `price`: `float` (required, >= 0.0)
+  - `description`: `Optional[str]` (500 chars)
+  - `stock`: `int` (default `0`)
+  - `is_available`: `bool` (default `true`)
+  - `tags`: `list[Tag]` (many-to-many relationship with `Tag` via `menu_item_tags`)
+
+
+---
+
+## Database Migrations ([migrations/versions](file:///c:/projects/bookstore-tabletop-cafe/migrations/versions))
+- **Latest Migration**: `f346dc1545dd_create_menu_items_and_tags_tables.py`
+  - Created tables `menu_items`, `tags`, and association table `menu_item_tags`.
+
 ---
 
 ## API Routers & Endpoints
@@ -78,14 +103,35 @@ Bookstore Tabletop Cafe is an async FastAPI backend system for managing a combin
 | `PUT` | `/games/{id}` | Admin | Update game entry |
 | `DELETE` | `/games/{id}` | Admin | Delete game entry |
 
+### Tag Router ([app/routers/tag.py](file:///c:/projects/bookstore-tabletop-cafe/app/routers/tag.py)) — Prefix: `/tags`
+| Method | Endpoint | Access | Description |
+|---|---|---|---|
+| `GET` | `/tags/` | Public | List all tags |
+| `GET` | `/tags/{id}` | Public | Get tag by ID |
+| `POST` | `/tags/` | Admin | Create new tag entry (`TagCreate` -> `Tag`) |
+| `DELETE` | `/tags/{id}` | Admin | Delete tag entry |
+
+### Menu Router ([app/routers/menu.py](file:///c:/projects/bookstore-tabletop-cafe/app/routers/menu.py)) — Prefix: `/menu`
+| Method | Endpoint | Access | Description |
+|---|---|---|---|
+| `GET` | `/menu/` | Public | List menu items (optional query filters: `category`, `is_available`, `tag_id`) |
+| `GET` | `/menu/{id}` | Public | Get menu item details by ID |
+| `POST` | `/menu/` | Admin | Create menu item (`MenuItemCreate` -> `MenuItem`) |
+| `PUT` | `/menu/{id}` | Admin | Update menu item details (`MenuItemUpdate` -> `MenuItem`) |
+| `PATCH` | `/menu/{id}/availability` | Admin | Quick toggle availability status (`MenuItemAvailabilityUpdate` -> `MenuItem`) |
+| `DELETE` | `/menu/{id}` | Admin | Delete menu item |
+
 ---
 
 ## Service Layer & Integrations
 - **Authentication Service**: [app/services/auth.py](file:///c:/projects/bookstore-tabletop-cafe/app/services/auth.py) (password verification, token generation).
 - **Book Service**: [app/services/book.py](file:///c:/projects/bookstore-tabletop-cafe/app/services/book.py) (CRUD operations & stock management).
 - **Game Service**: [app/services/game.py](file:///c:/projects/bookstore-tabletop-cafe/app/services/game.py) (CRUD operations & genre filtering).
+- **Tag Service**: [app/services/tag.py](file:///c:/projects/bookstore-tabletop-cafe/app/services/tag.py) (Tag CRUD & multi-ID queries).
+- **Menu Service**: [app/services/menu.py](file:///c:/projects/bookstore-tabletop-cafe/app/services/menu.py) (Menu item CRUD, tag association, availability toggle, and filtering).
 - **Open Library Integration**: [app/integrations/open_library.py](file:///c:/projects/bookstore-tabletop-cafe/app/integrations/open_library.py) (async HTTP client using `httpx` to fetch ISBN metadata).
 - **Dependency Injection**: [app/dependencies.py](file:///c:/projects/bookstore-tabletop-cafe/app/dependencies.py) (`get_db`, `get_current_user`, `get_current_admin_user`).
+
 
 ---
 
@@ -117,13 +163,13 @@ Emulate `.github/workflows/` locally using Docker and `nektos/act`:
 ### `feature-implementation-workflow`
 Location: [.agents/skills/feature-implementation-workflow/SKILL.md](file:///c:/projects/bookstore-tabletop-cafe/.agents/skills/feature-implementation-workflow/SKILL.md)
 
-Enforces a 6-phase process to prevent codebase knowledge debt, eliminate hallucinations, ensure high code quality, run automated tests/linters, and maintain documentation:
+Enforces a 6-phase process to prevent codebase knowledge debt, eliminate hallucinations, ensure high code quality, generate and execute Alembic database migrations when DB models change, run automated tests/linters, and maintain documentation:
 1. **Context & Discovery**: Read `CONTEXT.md` and codebase schemas to understand system state. The user provides feature requirements directly.
 2. **Grill-Me (Interactive Clarification)**: Ask targeted questions to clarify exact requirements, business rules, and edge cases.
-3. **Spec & Plan Sign-Off**: Detail Data Models, Pydantic Schemas, API Endpoints, and File Changes. Wait for explicit user approval before coding.
-4. **Implementation**: Execute changes adhering to async FastAPI, Pydantic, and SQLAlchemy best practices.
-5. **Automated Verification & Testing**: Run `ruff check .`, `ruff format --check .`, and `pytest`. Report any failures immediately to the user and fix before concluding.
-6. **Update `CONTEXT.md`**: Update `CONTEXT.md` with new data structures, endpoints, verification status, and architectural changes.
+3. **Spec & Plan Sign-Off**: Detail Data Models, Migration Files, Pydantic Schemas, API Endpoints, and File Changes. Wait for explicit user approval before coding.
+4. **Implementation & Migrations**: Execute changes adhering to async FastAPI, Pydantic, and SQLAlchemy best practices. When DB models change, generate and run Alembic migrations (`alembic revision --autogenerate` & `alembic upgrade head`) following `sqlalchemy-postgres` skill guidance.
+5. **Automated Verification & Testing**: Verify DB migrations run cleanly (`alembic upgrade head`), run `ruff check .`, `ruff format --check .`, and `pytest`. Report any failures immediately to the user and fix before concluding.
+6. **Update `CONTEXT.md`**: Update `CONTEXT.md` with new data structures, migrations, endpoints, verification status, and architectural changes.
 
 ### Additional Installed Skills
 - `sqlalchemy-postgres`: Patterns & guidance for SQLAlchemy 2.0 + PostgreSQL.

@@ -102,3 +102,25 @@ def stp_trdwn_game(client: TestClient, admin_headers):
 			f"{GAME_ENDPOINT}/{game_id}",
 			headers=admin_headers,
 		)
+
+
+@pytest.fixture
+def stp_trdwn_tag(client: TestClient, admin_headers):
+	res = client.post(TAG_ENDPOINT, json=CREATE_TAG_BODY, headers=admin_headers)
+
+	yield res
+
+	if res.status_code == HTTPStatus.CREATED:
+		tag_id = res.json()["id"]
+		client.delete(f"{TAG_ENDPOINT}/{tag_id}", headers=admin_headers)
+
+
+@pytest.fixture
+def stp_trdwn_menu_item(client: TestClient, admin_headers):
+	res = client.post(MENU_ENDPOINT, json=CREATE_MENU_DRINK_BODY, headers=admin_headers)
+
+	yield res
+
+	if res.status_code == HTTPStatus.CREATED:
+		item_id = res.json()["id"]
+		client.delete(f"{MENU_ENDPOINT}/{item_id}", headers=admin_headers)

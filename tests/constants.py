@@ -24,3 +24,26 @@ CREATE_GAME_BODY = {
 	"release_date": "2023-01-01",
 	"players": 4,
 }
+
+# Tag Constants
+TAG_ENDPOINT = "/tags"
+CREATE_TAG_BODY = {"name": "vegan"}
+
+# Menu Constants
+MENU_ENDPOINT = "/menu"
+CREATE_MENU_DRINK_BODY = {
+	"name": "Oat Milk Latte",
+	"category": "drink",
+	"description": "Creamy espresso with oat milk",
+	"price": 4.50,
+	"stock": 25,
+	"is_available": True,
+}
+CREATE_MENU_MEAL_BODY = {
+	"name": "Avocado Toast",
+	"category": "meal",
+	"description": "Sourdough toast topped with smashed avocado",
+	"price": 8.00,
+	"stock": 15,
+	"is_available": True,
+}
