@@ -1,4 +1,6 @@
-You are an expert in Python backend development with FastAPI.
+---
+trigger: always_on
+---
 
 Key Principles:
 

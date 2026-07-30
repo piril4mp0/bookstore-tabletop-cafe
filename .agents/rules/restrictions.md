@@ -1,2 +1,6 @@
+---
+trigger: always_on
+---
+
 # Restrictions
-1. Do not implement anything before I allow you to do so.
+1. Do not create any kind of tests unless you are told to do so

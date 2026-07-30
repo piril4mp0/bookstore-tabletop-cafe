@@ -7,11 +7,29 @@
       "skillPath": "skills/caveman/SKILL.md",
       "computedHash": "7935e83f9c6a8b7cbb5404d144b0d19e3ba93583f4388301c3dada37cd25adf8"
     },
+    "caveman-commit": {
+      "source": "juliusbrussee/caveman",
+      "sourceType": "github",
+      "skillPath": "skills/caveman-commit/SKILL.md",
+      "computedHash": "f028652defd5fdeddcce2994083cb1a7b201ee827bba8e2495546ee159fca3de"
+    },
     "fastapi": {
       "source": "fastapi/fastapi",
       "sourceType": "github",
       "skillPath": "fastapi/.agents/skills/fastapi/SKILL.md",
       "computedHash": "9feb517089c269af4fdab5031dea1100a92fd50081e906ccfaf8a971858e39f9"
+    },
+    "grill-me": {
+      "source": "mattpocock/skills",
+      "sourceType": "github",
+      "skillPath": "skills/productivity/grill-me/SKILL.md",
+      "computedHash": "7edd436132b43ea2973710f0c28a9879c9b0910651eb89a991a7e98cb6dbbacb"
+    },
+    "skill-creator": {
+      "source": "anthropics/skills",
+      "sourceType": "github",
+      "skillPath": "skills/skill-creator/SKILL.md",
+      "computedHash": "7e3c9cd74e9e2b4828527a857170e86310f2dab5ea8030a9043df2c7e6c88857"
     },
     "sqlalchemy-postgres": {
       "source": "cfircoo/claude-code-toolkit",
