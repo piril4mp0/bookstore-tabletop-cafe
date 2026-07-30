@@ -1,11 +1,11 @@
 ---
 name: feature-implementation-workflow
-description: Guided feature implementation workflow to prevent codebase knowledge debt, eliminate hallucinations, clarify user intent, obtain plan sign-off, and update CONTEXT.md. Use whenever implementing features, creating endpoints, modifying data models, or when the user asks to build or extend functionality.
+description: Guided feature implementation workflow to prevent codebase knowledge debt, eliminate hallucinations, clarify user intent, obtain plan sign-off, run automated checks (ruff, pytest), report failures, and update CONTEXT.md. Use whenever implementing features, creating endpoints, modifying data models, or when the user asks to build or extend functionality.
 ---
 
 # Feature Implementation Workflow
 
-This skill enforces a structured, interactive 5-phase process for implementing features in the codebase. It ensures high technical quality, prevents agent hallucinations, avoids "codebase knowledge debt" by keeping the user informed of architectural decisions, and maintains `CONTEXT.md`.
+This skill enforces a structured, interactive 6-phase process for implementing features in the codebase. It ensures high technical quality, prevents agent hallucinations, avoids "codebase knowledge debt" by keeping the user informed of architectural decisions, runs automated checks/tests, and maintains `CONTEXT.md`.
 
 ## Workflow Phases
 
@@ -23,11 +23,15 @@ This skill enforces a structured, interactive 5-phase process for implementing f
 └────────────┬────────────┘
              ▼
 ┌─────────────────────────┐
-│ 4. Implementation       │  Write clean async FastAPI/SQLAlchemy code (no auto tests)
+│ 4. Implementation       │  Write clean async FastAPI/SQLAlchemy code
 └────────────┬────────────┘
              ▼
 ┌─────────────────────────┐
-│ 5. Update CONTEXT.md    │  Document new structures & architecture in CONTEXT.md
+│ 5. Automated Checks     │  Run ruff check, ruff format --check, & pytest; report failures
+└────────────┬────────────┘
+             ▼
+┌─────────────────────────┐
+│ 6. Update CONTEXT.md    │  Document new structures & architecture in CONTEXT.md
 └─────────────────────────┘
 ```
 
@@ -72,15 +76,46 @@ This skill enforces a structured, interactive 5-phase process for implementing f
    - Write `async def` for endpoints and DB operations.
    - Use Pydantic models for validation and responses.
    - Follow project rules (e.g., `fastapi.md`, `sqlalchemy-postgres`).
-2. **Restrictions**: Do NOT write unit/E2E tests unless explicitly requested by the user.
+2. **Restrictions**: Do NOT write *new* unit/E2E test files unless explicitly requested by the user.
 
 ---
 
-### Phase 5: Update CONTEXT.md
+### Phase 5: Automated Verification & Testing
 
-1. Upon completing the feature implementation, update [CONTEXT.md](file:///c:/projects/bookstore-tabletop-cafe/CONTEXT.md).
+Always execute existing codebase verification checks after implementing code changes:
+
+1. **Ruff Linting**:
+   ```bash
+   uv run ruff check .
+   ```
+2. **Ruff Formatting**:
+   ```bash
+   uv run ruff format --check .
+   ```
+3. **Pytest Suite**:
+   Execute the test suite with required test environment variables:
+   ```bash
+   $env:DATABASE_URL="sqlite:///./test.db"; $env:SECRET_KEY="test-secret"; $env:ACCESS_TOKEN_EXPIRE_MINUTES="60"; $env:JWT_ALGORITHM="HS256"; uv run python -m pytest
+   ```
+4. **Local GitHub Actions Workflow Runner (`act`)** (Optional / Full CI Emulation):
+   If `act` and Docker are available, GitHub Actions workflows (`.github/workflows/`) can be emulated locally:
+   ```bash
+   act push          # Run all push workflows locally
+   act -j ruff       # Run ruff lint/format workflow job
+   act -j test       # Run pytest workflow job
+   ```
+5. **Report Failures**:
+   - If any linter, formatter, or test fails, **report the exact failure logs to the user**.
+   - Resolve and fix all underlying causes before declaring completion.
+
+---
+
+### Phase 6: Update CONTEXT.md
+
+1. Upon completing implementation and verifying clean test results, update [CONTEXT.md](file:///c:/projects/bookstore-tabletop-cafe/CONTEXT.md).
 2. Record:
    - Overview of the implemented feature
    - Added/modified database models and Pydantic schemas
    - New API endpoints and routes
+   - Verification status (linter, formatter, pytest output summary)
    - Important architectural or setup instructions
