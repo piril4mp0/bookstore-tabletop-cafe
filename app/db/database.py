@@ -1,6 +1,6 @@
-""""This module is responsible for setting up the database connection 
-and session management for the application. 
-It defines the SQLAlchemy engine, session factory, 
+""" "This module is responsible for setting up the database connection
+and session management for the application.
+It defines the SQLAlchemy engine, session factory,
 and table registry that will be used throughout the app to interact with the database."""
 
 from sqlalchemy import create_engine

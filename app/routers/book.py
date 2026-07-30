@@ -11,50 +11,50 @@ router = APIRouter(prefix="/books", tags=["books"])
 
 @router.get("/{isbn}", response_model=BookPublic, status_code=HTTPStatus.OK)
 def get_book_by_isbn(isbn: str, db: Session = Depends(get_db)):
-    return BookService.fetch_book_and_validate(db, isbn)
+	return BookService.fetch_book_and_validate(db, isbn)
 
 
 @router.get("/", response_model=list[BookPublic], status_code=HTTPStatus.OK)
 def get_books(
-    db: Session = Depends(get_db),
+	db: Session = Depends(get_db),
 ):
-    return BookService.get_books(db)
+	return BookService.get_books(db)
 
 
 @router.post("/import", response_model=BookPublic, status_code=HTTPStatus.CREATED)
 async def import_book(
-    book: BookImport,
-    db: Session = Depends(get_db),
-    current_user: UserModel = Depends(get_current_admin_user),
+	book: BookImport,
+	db: Session = Depends(get_db),
+	current_user: UserModel = Depends(get_current_admin_user),
 ):
-    return await BookService.import_book_from_open_library(db, book)
+	return await BookService.import_book_from_open_library(db, book)
 
 
 @router.patch("/add-stock/{isbn}", response_model=BookPublic, status_code=HTTPStatus.OK)
 def add_book_stock(
-    isbn: str,
-    stock: IncreaseBookStock = Body(),
-    db: Session = Depends(get_db),
-    current_user: UserModel = Depends(get_current_admin_user),
+	isbn: str,
+	stock: IncreaseBookStock = Body(),
+	db: Session = Depends(get_db),
+	current_user: UserModel = Depends(get_current_admin_user),
 ):
-    return BookService.add_book_stock(isbn, stock.stock, db)
+	return BookService.add_book_stock(isbn, stock.stock, db)
 
 
 @router.put("/{isbn}", response_model=BookPublic, status_code=HTTPStatus.OK)
 def edit_book(
-    isbn: str,
-    updated_book: BookPut = Body(),
-    db: Session = Depends(get_db),
-    current_user: UserModel = Depends(get_current_admin_user),
+	isbn: str,
+	updated_book: BookPut = Body(),
+	db: Session = Depends(get_db),
+	current_user: UserModel = Depends(get_current_admin_user),
 ):
-    return BookService.update_book(updated_book, db, isbn)
+	return BookService.update_book(updated_book, db, isbn)
 
 
 @router.delete("/{isbn}", status_code=HTTPStatus.OK)
 def remove_book(
-    isbn: str,
-    db: Session = Depends(get_db),
-    current_user: UserModel = Depends(get_current_admin_user),
+	isbn: str,
+	db: Session = Depends(get_db),
+	current_user: UserModel = Depends(get_current_admin_user),
 ):
-    BookService.remove_book(isbn, db)
-    return
+	BookService.remove_book(isbn, db)
+	return
