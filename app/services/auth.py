@@ -3,13 +3,14 @@ from http import HTTPStatus
 from zoneinfo import ZoneInfo
 
 from fastapi import HTTPException
+from jwt import encode
+from pwdlib import PasswordHash
 from sqlalchemy import select
 from sqlalchemy.orm import Session
+
 from app.core.settings import settings
-from pwdlib import PasswordHash
-from app.schemas.auth import Token, UserCreate, UserLogin
 from app.models.user import User as UserModel
-from jwt import encode
+from app.schemas.auth import Token, UserCreate, UserLogin
 
 SECRET_KEY = settings.SECRET_KEY
 ALGORITHM = settings.JWT_ALGORITHM

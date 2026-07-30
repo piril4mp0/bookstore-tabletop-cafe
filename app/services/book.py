@@ -1,9 +1,10 @@
-from app.models.book import Book
-from app.schemas.book import BookImport, BookPut
-from app.integrations.open_library import fetch_book_from_open_library
+from fastapi.exceptions import HTTPException
 from sqlalchemy import select
 from sqlalchemy.orm import Session
-from fastapi.exceptions import HTTPException
+
+from app.integrations.open_library import fetch_book_from_open_library
+from app.models.book import Book
+from app.schemas.book import BookImport, BookPut
 
 
 class BookService:

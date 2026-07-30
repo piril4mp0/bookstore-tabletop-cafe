@@ -1,10 +1,12 @@
 from http import HTTPStatus
-from fastapi import APIRouter, Depends, Body
+
+from fastapi import APIRouter, Body, Depends
 from sqlalchemy.orm import Session
-from app.dependencies import get_db, get_current_admin_user
+
+from app.dependencies import get_current_admin_user, get_db
+from app.models.user import User as UserModel
 from app.schemas.book import BookImport, BookPublic, BookPut, IncreaseBookStock
 from app.services.book import BookService
-from app.models.user import User as UserModel
 
 router = APIRouter(prefix="/books", tags=["books"])
 
@@ -57,4 +59,3 @@ def remove_book(
 	current_user: UserModel = Depends(get_current_admin_user),
 ):
 	BookService.remove_book(isbn, db)
-	return

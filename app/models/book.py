@@ -1,8 +1,8 @@
-from typing import Optional
-from app.db.database import table_registry
-from sqlalchemy import String, JSON
+from sqlalchemy import JSON, String
 from sqlalchemy.dialects import postgresql
 from sqlalchemy.orm import Mapped, mapped_as_dataclass, mapped_column
+
+from app.db.database import table_registry
 
 
 @mapped_as_dataclass(table_registry)
@@ -24,19 +24,17 @@ class Book:
 		init=False, primary_key=True, autoincrement=True, unique=True
 	)
 	isbn: Mapped[str] = mapped_column(String(13), unique=True, nullable=False)
-	title: Mapped[Optional[str]] = mapped_column(
-		String(255), nullable=True, default=None
-	)
-	pages: Mapped[Optional[int]] = mapped_column(nullable=True, default=None)
-	authors: Mapped[Optional[list[str]]] = mapped_column(
+	title: Mapped[str | None] = mapped_column(String(255), nullable=True, default=None)
+	pages: Mapped[int | None] = mapped_column(nullable=True, default=None)
+	authors: Mapped[list[str] | None] = mapped_column(
 		postgresql.ARRAY(String(255)).with_variant(JSON, "sqlite"),
 		nullable=True,
 		default=None,
 	)
-	year_released: Mapped[Optional[str]] = mapped_column(
+	year_released: Mapped[str | None] = mapped_column(
 		String(100), nullable=True, default=None
 	)
-	synopsis: Mapped[Optional[str]] = mapped_column(
+	synopsis: Mapped[str | None] = mapped_column(
 		String(1000), nullable=True, default="No Synopsis Available"
 	)
 	stock: Mapped[int] = mapped_column(default=0, nullable=False)

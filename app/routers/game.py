@@ -1,11 +1,12 @@
 from http import HTTPStatus
+
 from fastapi import APIRouter, Body, Depends, HTTPException, Path, Query
 from sqlalchemy.orm import Session
-from app.dependencies import get_db, get_current_admin_user
-from app.schemas.game import GameCreate, Game, GamePut
 
-from app.services.game import GameService
+from app.dependencies import get_current_admin_user, get_db
 from app.models.user import User as UserModel
+from app.schemas.game import Game, GameCreate, GamePut
+from app.services.game import GameService
 
 router = APIRouter(prefix="/games", tags=["games"])
 

@@ -1,7 +1,9 @@
-from http import HTTPStatus
-import pytest
 import uuid
+from http import HTTPStatus
+
+import pytest
 from fastapi.testclient import TestClient
+
 from tests.constants import *
 
 

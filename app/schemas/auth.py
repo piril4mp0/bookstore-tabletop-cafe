@@ -1,10 +1,9 @@
-from typing import Optional
-from pydantic import BaseModel, Field, EmailStr
+from pydantic import BaseModel, EmailStr, Field
 
 
 class UserPublic(BaseModel):
 	username: str = Field(..., min_length=3, max_length=20, examples=["abcuser"])
-	full_name: Optional[str] = Field(..., examples=["John Doe"])
+	full_name: str | None = Field(..., examples=["John Doe"])
 	email: EmailStr = Field(..., examples=["abc@gmail.com"])
 
 
@@ -18,12 +17,12 @@ class UserLogin(BaseModel):
 
 
 class UserPut(BaseModel):
-	username: Optional[str] = Field(
+	username: str | None = Field(
 		None, min_length=3, max_length=20, examples=["abcuser"]
 	)
-	full_name: Optional[str] = Field(None, examples=["John Doe"])
-	email: Optional[EmailStr] = Field(None, examples=["abc@gmail.com"])
-	password: Optional[str] = Field(None, min_length=6, examples=["123456"])
+	full_name: str | None = Field(None, examples=["John Doe"])
+	email: EmailStr | None = Field(None, examples=["abc@gmail.com"])
+	password: str | None = Field(None, min_length=6, examples=["123456"])
 
 
 class Token(BaseModel):

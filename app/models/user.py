@@ -1,6 +1,7 @@
-from app.db.database import table_registry
 from sqlalchemy import text
 from sqlalchemy.orm import Mapped, mapped_as_dataclass, mapped_column
+
+from app.db.database import table_registry
 
 
 @mapped_as_dataclass(table_registry)

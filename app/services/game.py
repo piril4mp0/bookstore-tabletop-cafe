@@ -1,5 +1,6 @@
-from sqlalchemy.orm import Session
 from sqlalchemy import select
+from sqlalchemy.orm import Session
+
 from app.models.game import Game as GameModel
 from app.schemas.game import GameCreate, GamePut
 

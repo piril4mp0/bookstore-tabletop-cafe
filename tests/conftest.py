@@ -1,14 +1,16 @@
 from http import HTTPStatus
-from httpx import Response
+
 import pytest
 from fastapi.testclient import TestClient
-from app.main import app
-from app.dependencies import get_db
+from httpx import Response
 from sqlalchemy.orm import Session
+
+from app.db.database import table_registry
+from app.dependencies import get_db
+from app.main import app
 from app.models.user import User as UserModel
 from tests.constants import *
 from tests.database import TestingSessionLocal, engine
-from app.db.database import table_registry
 
 
 @pytest.fixture

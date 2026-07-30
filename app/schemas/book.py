@@ -1,4 +1,3 @@
-from typing import Optional, List
 from pydantic import BaseModel, Field
 
 
@@ -14,16 +13,16 @@ class BookBase(BaseModel):
 		description="The ISBN of the book",
 		example="9780261103283",
 	)
-	title: Optional[str] = Field(
+	title: str | None = Field(
 		None, max_length=255, description="The title of the book", example="The Hobbit"
 	)
-	pages: Optional[int] = Field(
+	pages: int | None = Field(
 		None, gt=0, description="Number of pages in the book", example=310
 	)
-	authors: Optional[List[str]] = Field(
+	authors: list[str] | None = Field(
 		None, description="List of authors", example=["J.R.R. Tolkien"]
 	)
-	year_released: Optional[str] = Field(
+	year_released: str | None = Field(
 		None, description="The year the book was released", example="1937"
 	)
 	stock: int = Field(
@@ -40,18 +39,16 @@ class BookPublic(BookBase):
 
 
 class BookPut(BaseModel):
-	isbn: Optional[str] = Field(
+	isbn: str | None = Field(
 		None, min_length=10, max_length=13, description="The ISBN of the book"
 	)
-	title: Optional[str] = Field(
-		None, max_length=255, description="The title of the book"
-	)
-	pages: Optional[int] = Field(None, gt=0, description="Number of pages in the book")
-	authors: Optional[List[str]] = Field(None, description="List of authors")
-	year_released: Optional[str] = Field(
+	title: str | None = Field(None, max_length=255, description="The title of the book")
+	pages: int | None = Field(None, gt=0, description="Number of pages in the book")
+	authors: list[str] | None = Field(None, description="List of authors")
+	year_released: str | None = Field(
 		None, description="The year the book was released"
 	)
-	stock: Optional[int] = Field(
+	stock: int | None = Field(
 		None, ge=0, description="Current physical stock of the book"
 	)
 
@@ -66,6 +63,6 @@ class BookImport(BaseModel):
 		description="The ISBN of the book to fetch and import from Open Library",
 		example="9780261103283",
 	)
-	stock: Optional[int] = Field(
+	stock: int | None = Field(
 		default=0, ge=0, description="Current physical stock of the book"
 	)

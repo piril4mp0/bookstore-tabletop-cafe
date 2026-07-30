@@ -56,9 +56,10 @@ exclude = [
 [tool.ruff.lint]
 fixable = ["ALL"]
 unfixable = []
+ignore = ["B008"]
 
 [tool.ruff.lint.per-file-ignores]
-"tests/**/*.py" = ["F403", "F405"]
+"tests/**/*.py" = ["F403", "F405", "TRY002"]
 
 [tool.ruff.format]
 quote-style = "double"

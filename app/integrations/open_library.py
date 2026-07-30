@@ -1,7 +1,9 @@
 from http import HTTPStatus
-from fastapi import HTTPException
-from app.core.settings import settings
+
 import httpx
+from fastapi import HTTPException
+
+from app.core.settings import settings
 from app.models.book import Book
 
 
@@ -35,5 +37,5 @@ async def fetch_book_from_open_library(isbn: str, stock: int) -> Book | None:
 		except httpx.HTTPError as e:
 			raise HTTPException(
 				status_code=HTTPStatus.INTERNAL_SERVER_ERROR,
-				detail=f"Error fetching data from Open Library: {str(e)}",
+				detail=f"Error fetching data from Open Library: {e!s}",
 			)

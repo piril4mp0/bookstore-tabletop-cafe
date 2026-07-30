@@ -1,14 +1,15 @@
 # review this code
+import jwt
+from fastapi import Depends, HTTPException, status
+from fastapi.security import OAuth2PasswordBearer
+from jwt.exceptions import InvalidTokenError
+from sqlalchemy import select
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import Session
-from app.db.database import SessionLocal
-from fastapi.security import OAuth2PasswordBearer
-from fastapi import Depends, HTTPException, status
+
 from app.core.settings import settings
-import jwt
-from jwt.exceptions import InvalidTokenError
+from app.db.database import SessionLocal
 from app.models.user import User as UserModel
-from sqlalchemy import select
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/login")
 
@@ -17,9 +18,9 @@ def get_db():
 	db = SessionLocal()
 	try:
 		yield db
-	except SQLAlchemyError as e:
+	except SQLAlchemyError:
 		db.rollback()
-		raise e
+		raise
 	except Exception:
 		db.rollback()
 		raise
