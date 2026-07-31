@@ -128,7 +128,7 @@ Bookstore Tabletop Cafe is an async FastAPI backend system for managing a combin
 - **Book Service**: [app/services/book.py](file:///c:/projects/bookstore-tabletop-cafe/app/services/book.py) (CRUD operations & stock management).
 - **Game Service**: [app/services/game.py](file:///c:/projects/bookstore-tabletop-cafe/app/services/game.py) (CRUD operations & genre filtering).
 - **Tag Service**: [app/services/tag.py](file:///c:/projects/bookstore-tabletop-cafe/app/services/tag.py) (Tag CRUD & multi-ID queries).
-- **Menu Service**: [app/services/menu.py](file:///c:/projects/bookstore-tabletop-cafe/app/services/menu.py) (Menu item CRUD, tag association, availability toggle, and filtering).
+- **Menu Service**: [app/services/menu.py](file:///c:/projects/bookstore-tabletop-cafe/app/services/menu.py) (Menu item CRUD, tag association, availability toggle, filtering, and case-insensitive duplicate name validation on create/update).
 - **Open Library Integration**: [app/integrations/open_library.py](file:///c:/projects/bookstore-tabletop-cafe/app/integrations/open_library.py) (async HTTP client using `httpx` to fetch ISBN metadata).
 - **Dependency Injection**: [app/dependencies.py](file:///c:/projects/bookstore-tabletop-cafe/app/dependencies.py) (`get_db`, `get_current_user`, `get_current_admin_user`).
 
