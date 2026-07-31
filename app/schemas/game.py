@@ -27,6 +27,12 @@ class GameBase(BaseModel):
 	players: int = Field(
 		..., gt=0, description="The number of players the game supports", example=4
 	)
+	stock: int = Field(
+		1, ge=0, description="The total stock quantity of the game", example=5
+	)
+	current_stock: int = Field(
+		1, ge=0, description="The currently available stock quantity", example=5
+	)
 
 
 class GameCreate(GameBase):
@@ -60,4 +66,10 @@ class GamePut(BaseModel):
 	)
 	players: int | None = Field(
 		None, gt=0, description="The number of players the game supports", example=4
+	)
+	stock: int | None = Field(
+		None, ge=0, description="The total stock quantity of the game", example=5
+	)
+	current_stock: int | None = Field(
+		None, ge=0, description="The currently available stock quantity", example=5
 	)

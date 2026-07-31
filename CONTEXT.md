@@ -39,7 +39,7 @@ Bookstore Tabletop Cafe is an async FastAPI backend system for managing a combin
   - `synopsis`: `Optional[str]` (default "No Synopsis Available")
   - `stock`: `int` (default `0`)
 
-### 3. Game Inventory ([app/models/game.py](file:///c:/projects/bookstore-tabletop-cafe/app/models/game.py))
+### 3. Game Inventory ([app/models/game.py](file:///c:/Users/muril/Projects/bookstore-tabletop-cafe/app/models/game.py))
 - **Table**: `games`
 - **Fields**:
   - `id`: Primary key (autoincrement)
@@ -48,14 +48,16 @@ Bookstore Tabletop Cafe is an async FastAPI backend system for managing a combin
   - `description`: `str`
   - `release_date`: `datetime`
   - `players`: `int`
+  - `stock`: `int` (default `1`)
+  - `current_stock`: `int` (default `1`)
 
-### 4. Tag Management ([app/models/tag.py](file:///c:/projects/bookstore-tabletop-cafe/app/models/tag.py))
+### 4. Tag Management ([app/models/tag.py](file:///c:/Users/muril/Projects/bookstore-tabletop-cafe/app/models/tag.py))
 - **Table**: `tags`
 - **Fields**:
   - `id`: Primary key (autoincrement)
   - `name`: `str` (50 chars, unique, required)
 
-### 5. Menu Items ([app/models/menu.py](file:///c:/projects/bookstore-tabletop-cafe/app/models/menu.py))
+### 5. Menu Items ([app/models/menu.py](file:///c:/Users/muril/Projects/bookstore-tabletop-cafe/app/models/menu.py))
 - **Table**: `menu_items` (and association table `menu_item_tags`)
 - **Fields**:
   - `id`: Primary key (autoincrement)
@@ -67,24 +69,52 @@ Bookstore Tabletop Cafe is an async FastAPI backend system for managing a combin
   - `is_available`: `bool` (default `true`)
   - `tags`: `list[Tag]` (many-to-many relationship with `Tag` via `menu_item_tags`)
 
+### 6. Game Tables ([app/models/table.py](file:///c:/Users/muril/Projects/bookstore-tabletop-cafe/app/models/table.py))
+- **Table**: `game_tables`
+- **Fields**:
+  - `id`: Primary key (autoincrement)
+  - `number`: `int` (unique, required)
+  - `chairs`: `int` (required)
+  - `size`: `str` (`"small"`, `"medium"`, `"large"`)
+
+### 7. Operating Hours ([app/models/operating_hours.py](file:///c:/Users/muril/Projects/bookstore-tabletop-cafe/app/models/operating_hours.py))
+- **Table**: `operating_hours`
+- **Fields**:
+  - `id`: Primary key (autoincrement)
+  - `day_of_week`: `int` (0=Monday ... 6=Sunday, unique, required)
+  - `open_time`: `time` (required)
+  - `close_time`: `time` (required)
+  - `is_closed`: `bool` (default `false`)
+
+### 8. Reservations ([app/models/reservation.py](file:///c:/Users/muril/Projects/bookstore-tabletop-cafe/app/models/reservation.py))
+- **Table**: `reservations`
+- **Fields**:
+  - `id`: Primary key (autoincrement)
+  - `user_id`: `int` (foreign key to `users.id`)
+  - `game_id`: `int` (foreign key to `games.id`)
+  - `table_id`: `int` (foreign key to `game_tables.id`)
+  - `starts_at`: `datetime` (required)
+  - `ends_at`: `datetime` (required)
+  - `status`: `str` (default `"active"`, values: `"active"`, `"cancelled"`, `"completed"`)
+
 
 ---
 
-## Database Migrations ([migrations/versions](file:///c:/projects/bookstore-tabletop-cafe/migrations/versions))
-- **Latest Migration**: `f346dc1545dd_create_menu_items_and_tags_tables.py`
-  - Created tables `menu_items`, `tags`, and association table `menu_item_tags`.
+## Database Migrations ([migrations/versions](file:///c:/Users/muril/Projects/bookstore-tabletop-cafe/migrations/versions))
+- **Latest Migration**: `7f16f430d75f_add_tables_operating_hours_and_reservations.py`
+  - Added tables `game_tables`, `operating_hours`, `reservations`, and added `stock` and `current_stock` to `games`.
 
 ---
 
 ## API Routers & Endpoints
 
-### Auth Router ([app/routers/auth.py](file:///c:/projects/bookstore-tabletop-cafe/app/routers/auth.py)) — Prefix: `/auth`
+### Auth Router ([app/routers/auth.py](file:///c:/Users/muril/Projects/bookstore-tabletop-cafe/app/routers/auth.py)) — Prefix: `/auth`
 | Method | Endpoint | Access | Description |
 |---|---|---|---|
 | `POST` | `/auth/signup` | Public | Register new user account (`UserCreate` -> `UserPublic`) |
 | `POST` | `/auth/login` | Public | Authenticate user & return JWT token (`OAuth2PasswordRequestForm` -> `Token`) |
 
-### Book Router ([app/routers/book.py](file:///c:/projects/bookstore-tabletop-cafe/app/routers/book.py)) — Prefix: `/books`
+### Book Router ([app/routers/book.py](file:///c:/Users/muril/Projects/bookstore-tabletop-cafe/app/routers/book.py)) — Prefix: `/books`
 | Method | Endpoint | Access | Description |
 |---|---|---|---|
 | `GET` | `/books/` | Public | List all books in catalog |
@@ -94,7 +124,7 @@ Bookstore Tabletop Cafe is an async FastAPI backend system for managing a combin
 | `PUT` | `/books/{isbn}` | Admin | Update book metadata |
 | `DELETE` | `/books/{isbn}` | Admin | Delete book from catalog |
 
-### Game Router ([app/routers/game.py](file:///c:/projects/bookstore-tabletop-cafe/app/routers/game.py)) — Prefix: `/games`
+### Game Router ([app/routers/game.py](file:///c:/Users/muril/Projects/bookstore-tabletop-cafe/app/routers/game.py)) — Prefix: `/games`
 | Method | Endpoint | Access | Description |
 |---|---|---|---|
 | `GET` | `/games/` | Public | List games (optional query param `genre` filter) |
@@ -103,7 +133,7 @@ Bookstore Tabletop Cafe is an async FastAPI backend system for managing a combin
 | `PUT` | `/games/{id}` | Admin | Update game entry |
 | `DELETE` | `/games/{id}` | Admin | Delete game entry |
 
-### Tag Router ([app/routers/tag.py](file:///c:/projects/bookstore-tabletop-cafe/app/routers/tag.py)) — Prefix: `/tags`
+### Tag Router ([app/routers/tag.py](file:///c:/Users/muril/Projects/bookstore-tabletop-cafe/app/routers/tag.py)) — Prefix: `/tags`
 | Method | Endpoint | Access | Description |
 |---|---|---|---|
 | `GET` | `/tags/` | Public | List all tags |
@@ -111,7 +141,7 @@ Bookstore Tabletop Cafe is an async FastAPI backend system for managing a combin
 | `POST` | `/tags/` | Admin | Create new tag entry (`TagCreate` -> `Tag`) |
 | `DELETE` | `/tags/{id}` | Admin | Delete tag entry |
 
-### Menu Router ([app/routers/menu.py](file:///c:/projects/bookstore-tabletop-cafe/app/routers/menu.py)) — Prefix: `/menu`
+### Menu Router ([app/routers/menu.py](file:///c:/Users/muril/Projects/bookstore-tabletop-cafe/app/routers/menu.py)) — Prefix: `/menu`
 | Method | Endpoint | Access | Description |
 |---|---|---|---|
 | `GET` | `/menu/` | Public | List menu items (optional query filters: `category`, `is_available`, `tag_id`) |
@@ -121,16 +151,44 @@ Bookstore Tabletop Cafe is an async FastAPI backend system for managing a combin
 | `PATCH` | `/menu/{id}/availability` | Admin | Quick toggle availability status (`MenuItemAvailabilityUpdate` -> `MenuItem`) |
 | `DELETE` | `/menu/{id}` | Admin | Delete menu item |
 
+### Table Router ([app/routers/table.py](file:///c:/Users/muril/Projects/bookstore-tabletop-cafe/app/routers/table.py)) — Prefix: `/tables`
+| Method | Endpoint | Access | Description |
+|---|---|---|---|
+| `GET` | `/tables/` | Public | List all game tables |
+| `GET` | `/tables/{id}` | Public | Get game table by ID |
+| `POST` | `/tables/` | Admin | Create game table (`TableCreate` -> `Table`) |
+| `PUT` | `/tables/{id}` | Admin | Update game table (`TableUpdate` -> `Table`) |
+| `DELETE` | `/tables/{id}` | Admin | Delete game table |
+
+### Operating Hours Router ([app/routers/operating_hours.py](file:///c:/Users/muril/Projects/bookstore-tabletop-cafe/app/routers/operating_hours.py)) — Prefix: `/operating-hours`
+| Method | Endpoint | Access | Description |
+|---|---|---|---|
+| `GET` | `/operating-hours/` | Public | List operating hours for all days (0-6) |
+| `GET` | `/operating-hours/{day_of_week}` | Public | Get operating hours for a specific day |
+| `PUT` | `/operating-hours/{day_of_week}` | Admin | Upsert operating hours for a day (`OperatingHoursUpdate` -> `OperatingHoursResponse`) |
+
+### Reservation Router ([app/routers/reservation.py](file:///c:/Users/muril/Projects/bookstore-tabletop-cafe/app/routers/reservation.py)) — Prefix: `/reservations`
+| Method | Endpoint | Access | Description |
+|---|---|---|---|
+| `POST` | `/reservations/` | Authenticated | Create a table and game reservation (`ReservationCreate` -> `ReservationResponse`) |
+| `GET` | `/reservations/` | Authenticated | List reservations (Customer sees own, Admin sees all) |
+| `GET` | `/reservations/{id}` | Authenticated | Get reservation details by ID (Owner or Admin) |
+| `PATCH` | `/reservations/{id}/cancel` | Authenticated | Cancel reservation and replenish game stock (Owner or Admin) |
+
 ---
 
 ## Service Layer & Integrations
-- **Authentication Service**: [app/services/auth.py](file:///c:/projects/bookstore-tabletop-cafe/app/services/auth.py) (password verification, token generation).
-- **Book Service**: [app/services/book.py](file:///c:/projects/bookstore-tabletop-cafe/app/services/book.py) (CRUD operations & stock management).
-- **Game Service**: [app/services/game.py](file:///c:/projects/bookstore-tabletop-cafe/app/services/game.py) (CRUD operations & genre filtering).
-- **Tag Service**: [app/services/tag.py](file:///c:/projects/bookstore-tabletop-cafe/app/services/tag.py) (Tag CRUD, multi-ID queries, and case-insensitive duplicate name validation on create returning HTTP 409 Conflict).
-- **Menu Service**: [app/services/menu.py](file:///c:/projects/bookstore-tabletop-cafe/app/services/menu.py) (Menu item CRUD, tag association, availability toggle, filtering, and case-insensitive duplicate name validation on create/update).
-- **Open Library Integration**: [app/integrations/open_library.py](file:///c:/projects/bookstore-tabletop-cafe/app/integrations/open_library.py) (async HTTP client using `httpx` to fetch ISBN metadata).
-- **Dependency Injection**: [app/dependencies.py](file:///c:/projects/bookstore-tabletop-cafe/app/dependencies.py) (`get_db`, `get_current_user`, `get_current_admin_user`).
+- **Authentication Service**: [app/services/auth.py](file:///c:/Users/muril/Projects/bookstore-tabletop-cafe/app/services/auth.py) (password verification, token generation).
+- **Book Service**: [app/services/book.py](file:///c:/Users/muril/Projects/bookstore-tabletop-cafe/app/services/book.py) (CRUD operations & stock management).
+- **Game Service**: [app/services/game.py](file:///c:/Users/muril/Projects/bookstore-tabletop-cafe/app/services/game.py) (CRUD operations, genre filtering, and stock management).
+- **Tag Service**: [app/services/tag.py](file:///c:/Users/muril/Projects/bookstore-tabletop-cafe/app/services/tag.py) (Tag CRUD, multi-ID queries, and case-insensitive duplicate name validation).
+- **Menu Service**: [app/services/menu.py](file:///c:/Users/muril/Projects/bookstore-tabletop-cafe/app/services/menu.py) (Menu item CRUD, tag association, availability toggle, filtering).
+- **Table Service**: [app/services/table.py](file:///c:/Users/muril/Projects/bookstore-tabletop-cafe/app/services/table.py) (Game table CRUD and duplicate number checks).
+- **Operating Hours Service**: [app/services/operating_hours.py](file:///c:/Users/muril/Projects/bookstore-tabletop-cafe/app/services/operating_hours.py) (Store hours retrieval and upsert).
+- **Reservation Service**: [app/services/reservation.py](file:///c:/Users/muril/Projects/bookstore-tabletop-cafe/app/services/reservation.py) (Table overlap validation, operating hours validation, 30m minimum duration check, game stock check/decrement, and cancellation replenishment).
+- **Open Library Integration**: [app/integrations/open_library.py](file:///c:/Users/muril/Projects/bookstore-tabletop-cafe/app/integrations/open_library.py) (async HTTP client using `httpx` to fetch ISBN metadata).
+- **Dependency Injection**: [app/dependencies.py](file:///c:/Users/muril/Projects/bookstore-tabletop-cafe/app/dependencies.py) (`get_db`, `get_current_user`, `get_current_admin_user`).
+
 
 
 ---
