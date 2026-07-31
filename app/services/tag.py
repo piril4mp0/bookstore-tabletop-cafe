@@ -1,4 +1,7 @@
-from sqlalchemy import select
+from http import HTTPStatus
+
+from fastapi import HTTPException
+from sqlalchemy import func, select
 from sqlalchemy.orm import Session
 
 from app.models.tag import Tag as TagModel
@@ -7,6 +10,20 @@ from app.schemas.tag import TagCreate
 
 class TagService:
 	"""TagService Class deals with business logic involving Tags."""
+
+	@staticmethod
+	def get_tag_by_name(db: Session, name: str) -> TagModel | None:
+		"""Gets a tag from the database by name (case-insensitive).
+
+		Args:
+		    db (Session): Database session.
+		    name (str): Tag name.
+
+		Returns:
+		    TagModel | None: Tag model if found, else None.
+		"""
+		stmt = select(TagModel).where(func.lower(TagModel.name) == name.lower())
+		return db.scalar(stmt)
 
 	@staticmethod
 	def create_tag(db: Session, tag: TagCreate) -> TagModel:
@@ -18,7 +35,17 @@ class TagService:
 
 		Returns:
 		    TagModel: The created tag model.
+
+		Raises:
+		    HTTPException: 409 Conflict if tag with the same name already exists.
 		"""
+		existing_tag = TagService.get_tag_by_name(db, tag.name)
+		if existing_tag:
+			raise HTTPException(
+				status_code=HTTPStatus.CONFLICT,
+				detail=f'Tag with name "{tag.name}" already exists',
+			)
+
 		new_tag = TagModel(name=tag.name)
 		db.add(new_tag)
 		db.commit()
