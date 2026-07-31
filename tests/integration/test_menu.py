@@ -156,3 +156,45 @@ def test_delete_menu_item(
 	delete_res = client.delete(f"{MENU_ENDPOINT}/{item_id}", headers=admin_headers)
 	assert delete_res.status_code == HTTPStatus.NO_CONTENT
 	assert client.get(f"{MENU_ENDPOINT}/{item_id}").status_code == HTTPStatus.NOT_FOUND
+
+
+@pytest.mark.core
+def test_create_duplicate_menu_item_fails(
+	client: TestClient, stp_trdwn_menu_item, admin_headers: dict[str, str]
+):
+	duplicate_body = {**CREATE_MENU_DRINK_BODY, "name": "oat milk latte"}
+	response = client.post(MENU_ENDPOINT, json=duplicate_body, headers=admin_headers)
+	assert response.status_code == HTTPStatus.CONFLICT
+	assert (
+		response.json()["detail"]
+		== 'Menu item with name "oat milk latte" already exists'
+	)
+
+
+@pytest.mark.core
+def test_update_menu_item_duplicate_name_fails(
+	client: TestClient, stp_trdwn_menu_item, admin_headers: dict[str, str]
+):
+	second_item_body = {
+		**CREATE_MENU_DRINK_BODY,
+		"name": "Matcha Latte",
+	}
+	create_res = client.post(
+		MENU_ENDPOINT, json=second_item_body, headers=admin_headers
+	)
+	assert create_res.status_code == HTTPStatus.CREATED
+	second_id = create_res.json()["id"]
+
+	try:
+		update_res = client.put(
+			f"{MENU_ENDPOINT}/{second_id}",
+			json={"name": "OAT MILK LATTE"},
+			headers=admin_headers,
+		)
+		assert update_res.status_code == HTTPStatus.CONFLICT
+		assert (
+			update_res.json()["detail"]
+			== 'Menu item with name "OAT MILK LATTE" already exists'
+		)
+	finally:
+		client.delete(f"{MENU_ENDPOINT}/{second_id}", headers=admin_headers)
