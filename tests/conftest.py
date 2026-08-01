@@ -8,6 +8,14 @@ from sqlalchemy.orm import Session
 from app.db.database import table_registry
 from app.dependencies import get_db
 from app.main import app
+from app.models.book import Book  # noqa: F401
+from app.models.game import Game  # noqa: F401
+from app.models.menu import MenuItem, menu_item_tags  # noqa: F401
+from app.models.operating_hours import OperatingHours  # noqa: F401
+from app.models.order import Order, OrderItem  # noqa: F401
+from app.models.reservation import Reservation  # noqa: F401
+from app.models.table import GameTable  # noqa: F401
+from app.models.tag import Tag  # noqa: F401
 from app.models.user import User as UserModel
 from tests.constants import *
 from tests.database import TestingSessionLocal, engine
@@ -156,3 +164,14 @@ def stp_trdwn_table(client: TestClient, admin_headers):
 	if res.status_code == HTTPStatus.CREATED:
 		table_id = res.json()["id"]
 		client.delete(f"{TABLE_ENDPOINT}/{table_id}", headers=admin_headers)
+
+
+@pytest.fixture
+def stp_trdwn_meal_item(client: TestClient, admin_headers):
+	res = client.post(MENU_ENDPOINT, json=CREATE_MENU_MEAL_BODY, headers=admin_headers)
+
+	yield res
+
+	if res.status_code == HTTPStatus.CREATED:
+		item_id = res.json()["id"]
+		client.delete(f"{MENU_ENDPOINT}/{item_id}", headers=admin_headers)

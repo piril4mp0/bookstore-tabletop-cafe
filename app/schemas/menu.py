@@ -28,7 +28,6 @@ class MenuItemBase(BaseModel):
 		example="Rich single-shot espresso",
 	)
 	price: float = Field(..., ge=0.0, description="Price of the item", example=3.50)
-	stock: int = Field(0, ge=0, description="Available stock quantity", example=50)
 	is_available: bool = Field(
 		True,
 		description="Whether item is active and available for ordering",
@@ -53,7 +52,6 @@ class MenuItemUpdate(BaseModel):
 		None, max_length=500, description="Description of the menu item"
 	)
 	price: float | None = Field(None, ge=0.0, description="Price of the item")
-	stock: int | None = Field(None, ge=0, description="Available stock quantity")
 	is_available: bool | None = Field(None, description="Availability status")
 	tag_ids: list[int] | None = Field(
 		None, description="IDs of tags associated with this menu item"

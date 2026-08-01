@@ -65,7 +65,6 @@ Bookstore Tabletop Cafe is an async FastAPI backend system for managing a combin
   - `category`: `str` (`"drink"` or `"meal"`, required)
   - `price`: `float` (required, >= 0.0)
   - `description`: `Optional[str]` (500 chars)
-  - `stock`: `int` (default `0`)
   - `is_available`: `bool` (default `true`)
   - `tags`: `list[Tag]` (many-to-many relationship with `Tag` via `menu_item_tags`)
 
@@ -97,12 +96,27 @@ Bookstore Tabletop Cafe is an async FastAPI backend system for managing a combin
   - `ends_at`: `datetime` (required)
   - `status`: `str` (default `"active"`, values: `"active"`, `"cancelled"`, `"completed"`)
 
+### 9. Orders & Order Items ([app/models/order.py](file:///c:/Users/muril/Projects/bookstore-tabletop-cafe/app/models/order.py))
+- **Table**: `orders` and `order_items`
+- **Fields (`orders`)**:
+  - `id`: Primary key (autoincrement)
+  - `table_number`: `int` (foreign key to `game_tables.number`)
+  - `user_id`: `Optional[int]` (foreign key to `users.id`)
+  - `notes`: `Optional[str]` (255 chars)
+  - `status`: `str` (default `"pending"`, values: `"pending"`, `"preparing"`, `"ready"`, `"served"`, `"cancelled"`)
+  - `created_at`: `datetime` (required)
+- **Fields (`order_items`)**:
+  - `id`: Primary key (autoincrement)
+  - `order_id`: `int` (foreign key to `orders.id`, cascade delete)
+  - `menu_item_id`: `int` (foreign key to `menu_items.id`, cascade delete)
+  - `unit_price`: `float` (historical price snapshot)
+  - `quantity`: `int` (default 1)
 
 ---
 
 ## Database Migrations ([migrations/versions](file:///c:/Users/muril/Projects/bookstore-tabletop-cafe/migrations/versions))
-- **Latest Migration**: `7f16f430d75f_add_tables_operating_hours_and_reservations.py`
-  - Added tables `game_tables`, `operating_hours`, `reservations`, and added `stock` and `current_stock` to `games`.
+- **Latest Migration**: `8a2b3c4d5e6f_add_orders_and_remove_menu_stock.py`
+  - Created tables `orders` and `order_items`; dropped obsolete `stock` column from `menu_items`.
 
 ---
 
@@ -175,6 +189,14 @@ Bookstore Tabletop Cafe is an async FastAPI backend system for managing a combin
 | `GET` | `/reservations/{id}` | Authenticated | Get reservation details by ID (Owner or Admin) |
 | `PATCH` | `/reservations/{id}/cancel` | Authenticated | Cancel reservation and replenish game stock (Owner or Admin) |
 
+### Order Router ([app/routers/order.py](file:///c:/Users/muril/Projects/bookstore-tabletop-cafe/app/routers/order.py)) — Prefix: `/orders`
+| Method | Endpoint | Access | Description |
+|---|---|---|---|
+| `POST` | `/orders/` | Admin | Create multi-item order at a game table (`OrderCreate` -> `OrderResponse`) |
+| `GET` | `/orders/` | Admin | List all orders (Admin only; filters: `table_number`, `status`) |
+| `GET` | `/orders/{id}` | Admin | Get order details by ID (Admin only) |
+| `PATCH` | `/orders/{id}/status` | Admin | Update order status (`pending` -> `preparing` -> `ready` -> `served` / `cancelled`) |
+
 ---
 
 ## Service Layer & Integrations
@@ -186,6 +208,7 @@ Bookstore Tabletop Cafe is an async FastAPI backend system for managing a combin
 - **Table Service**: [app/services/table.py](file:///c:/Users/muril/Projects/bookstore-tabletop-cafe/app/services/table.py) (Game table CRUD and duplicate number checks).
 - **Operating Hours Service**: [app/services/operating_hours.py](file:///c:/Users/muril/Projects/bookstore-tabletop-cafe/app/services/operating_hours.py) (Store hours retrieval and upsert).
 - **Reservation Service**: [app/services/reservation.py](file:///c:/Users/muril/Projects/bookstore-tabletop-cafe/app/services/reservation.py) (Table overlap validation, operating hours validation, 30m minimum duration check, game stock check/decrement, and cancellation replenishment).
+- **Order Service**: [app/services/order.py](file:///c:/Users/muril/Projects/bookstore-tabletop-cafe/app/services/order.py) (Multi-item order creation, table number validation, availability check, order listing with role filters, status progression).
 - **Open Library Integration**: [app/integrations/open_library.py](file:///c:/Users/muril/Projects/bookstore-tabletop-cafe/app/integrations/open_library.py) (async HTTP client using `httpx` to fetch ISBN metadata).
 - **Dependency Injection**: [app/dependencies.py](file:///c:/Users/muril/Projects/bookstore-tabletop-cafe/app/dependencies.py) (`get_db`, `get_current_user`, `get_current_admin_user`).
 
@@ -204,7 +227,7 @@ uv run ruff check .
 # 2. Formatting Check
 uv run ruff format --check .
 
-# 3. Test Suite (56 integration tests passing)
+# 3. Test Suite (66 integration tests passing)
 $env:DATABASE_URL="sqlite:///./test.db"; $env:SECRET_KEY="test-secret"; $env:ACCESS_TOKEN_EXPIRE_MINUTES="60"; $env:JWT_ALGORITHM="HS256"; uv run python -m pytest
 ```
 
@@ -216,6 +239,7 @@ $env:DATABASE_URL="sqlite:///./test.db"; $env:SECRET_KEY="test-secret"; $env:ACC
 - [test_table.py](file:///c:/Users/muril/Projects/bookstore-tabletop-cafe/tests/integration/test_table.py): Game table CRUD, table number conflict validation, public/admin authorization.
 - [test_operating_hours.py](file:///c:/Users/muril/Projects/bookstore-tabletop-cafe/tests/integration/test_operating_hours.py): Store hours list, get by day (0-6), admin upsert, non-admin permissions.
 - [test_reservation.py](file:///c:/Users/muril/Projects/bookstore-tabletop-cafe/tests/integration/test_reservation.py): Reservation creation, duration check (>=30m), same calendar day validation, store operating hours validation, table overlap prevention, game stock decrement & cancellation replenishment, customer/admin authorization.
+- [test_order.py](file:///c:/Users/muril/Projects/bookstore-tabletop-cafe/tests/integration/test_order.py): Multi-item order creation, invalid table validation, item availability check, total price calculation, admin onlyvisibility, status workflow (`pending` -> `preparing` -> `ready` -> `served`).
 
 ### Local GitHub Actions Runner (`act`)
 Emulate `.github/workflows/` locally using Docker and `nektos/act`:

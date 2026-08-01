@@ -55,7 +55,6 @@ class MenuService:
 			else str(item.category),
 			description=item.description,
 			price=item.price,
-			stock=item.stock,
 			is_available=item.is_available,
 			tags=tags,
 		)

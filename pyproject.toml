@@ -64,3 +64,8 @@ ignore = ["B008"]
 [tool.ruff.format]
 quote-style = "double"
 indent-style = "tab"
+
+[tool.pytest.ini_options]
+markers = [
+    "core: core tests",
+]

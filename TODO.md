@@ -3,7 +3,7 @@
 ## Authentication & Security
 - [x] Implement User system (customers and admins)
 - [ ] Implement Refresh Token flow (`/auth/refresh`, `RefreshToken` model, token rotation)
-- [ ] Implement Rate Limiting (`slowapi` or Redis) on sensitive endpoints (`/auth/login`, `/books/import`)
+- [ ] Implement Rate Limiting (Redis) on sensitive endpoints (`/auth/login`, `/books/import`)
 
 ## Models & Features
 - [x] Change `Game` model to include stock control
@@ -25,5 +25,5 @@
 
 ## DevOps, CI/CD & Documentation
 - [x] Configure GitHub Actions and a CI/CD pipeline
-- [ ] Create `Dockerfile` & `docker-compose.yml` (FastAPI + Postgres + Redis)
-- [ ] Enrich OpenAPI/Swagger documentation with field examples and error responses
+- [x] Create `Dockerfile` & `docker-compose.yml` (FastAPI + Postgres + Redis)
+- [x] Enrich OpenAPI/Swagger documentation with field examples and error responses
