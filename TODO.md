@@ -1,20 +1,29 @@
 # Project TODOs
 
-## Models & Features
-- [ x ] Change `Game` model to include stock control
-- [ x ] Create book stock control (similar to the `Game` structure)
-- [ ] Create a table reservation system for customers to schedule gaming sessions
-- [ x ] Implement User system (customers and admins)
-- [  ] Implement limit when retrieving books and games
-- [  ] Document all methods and classes
+## Authentication & Security
+- [x] Implement User system (customers and admins)
+- [ ] Implement Refresh Token flow (`/auth/refresh`, `RefreshToken` model, token rotation)
+- [ ] Implement Rate Limiting (`slowapi` or Redis) on sensitive endpoints (`/auth/login`, `/books/import`)
 
+## Models & Features
+- [x] Change `Game` model to include stock control
+- [x] Create book stock control (similar to the `Game` structure)
+- [x] Create a table reservation system for customers to schedule gaming sessions
+- [ ] Implement Cafe Order System (`Orders` and `OrderItems` for table consummation)
+- [ ] Implement Game Check-in/Check-out status tracking (in-game, returned, damaged)
+- [ ] Implement pagination & Full-Text Search / filtering for books and games catalog
+- [ ] Document all methods and classes
+
+## Architecture & Refactoring
+- [ ] Implement custom domain exceptions & global exception handlers
+- [ ] Implement Redis caching for static/low-change endpoints (menu, games, operating hours)
+- [ ] Implement background workers/tasks (reservation cleanup, email notifications, expired token pruning)
 
 ## Testing
-- [ ] Continue implementing unit tests
+- [x] Continue implementing unit & integration tests
 - [ ] Implement E2E API tests
 
-## Performance & Architecture
-- [ ] Implement caching and optimization
-
-## DevOps & CI/CD
-- [ ] Configure GitHub Actions and a CI/CD pipeline
+## DevOps, CI/CD & Documentation
+- [x] Configure GitHub Actions and a CI/CD pipeline
+- [ ] Create `Dockerfile` & `docker-compose.yml` (FastAPI + Postgres + Redis)
+- [ ] Enrich OpenAPI/Swagger documentation with field examples and error responses
