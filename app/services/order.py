@@ -1,9 +1,12 @@
 from http import HTTPStatus
+
 from fastapi import HTTPException
 from sqlalchemy import select
 from sqlalchemy.orm import Session
+
 from app.models.menu import MenuItem as MenuItemModel
-from app.models.order import Order as OrderModel, OrderItem as OrderItemModel
+from app.models.order import Order as OrderModel
+from app.models.order import OrderItem as OrderItemModel
 from app.models.table import GameTable as GameTableModel
 from app.schemas.order import OrderCreate, OrderStatus
 
