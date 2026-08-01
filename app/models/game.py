@@ -30,3 +30,5 @@ class Game:
 	description: Mapped[str] = mapped_column(nullable=False)
 	release_date: Mapped[datetime] = mapped_column(nullable=False)
 	players: Mapped[int] = mapped_column(nullable=False)
+	stock: Mapped[int] = mapped_column(default=1, nullable=False)
+	current_stock: Mapped[int] = mapped_column(default=1, nullable=False)

@@ -6,6 +6,9 @@ from app.routers.auth import router as auth_router
 from app.routers.book import router as books_router
 from app.routers.game import router as games_router
 from app.routers.menu import router as menu_router
+from app.routers.operating_hours import router as operating_hours_router
+from app.routers.reservation import router as reservations_router
+from app.routers.table import router as tables_router
 from app.routers.tag import router as tags_router
 
 logging.basicConfig(
@@ -21,3 +24,6 @@ app.include_router(auth_router)
 app.include_router(books_router)
 app.include_router(tags_router)
 app.include_router(menu_router)
+app.include_router(tables_router)
+app.include_router(operating_hours_router)
+app.include_router(reservations_router)
