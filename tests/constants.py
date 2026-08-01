@@ -5,6 +5,13 @@ ADMIN_DATA = {
 	"password": "password123",
 }
 
+CUSTOMER_DATA = {
+	"username": "customer_test",
+	"full_name": "Customer User",
+	"email": "customer_test@gmail.com",
+	"password": "password123",
+}
+
 
 # Book Constants
 BOOK_DATA = {
@@ -47,3 +54,22 @@ CREATE_MENU_MEAL_BODY = {
 	"stock": 15,
 	"is_available": True,
 }
+
+# Table Constants
+TABLE_ENDPOINT = "/tables"
+CREATE_TABLE_BODY = {
+	"number": 1,
+	"chairs": 4,
+	"size": "medium",
+}
+
+# Operating Hours Constants
+OPERATING_HOURS_ENDPOINT = "/operating-hours"
+UPDATE_OPERATING_HOURS_BODY = {
+	"open_time": "09:00:00",
+	"close_time": "22:00:00",
+	"is_closed": False,
+}
+
+# Reservation Constants
+RESERVATION_ENDPOINT = "/reservations"

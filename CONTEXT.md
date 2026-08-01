@@ -204,9 +204,18 @@ uv run ruff check .
 # 2. Formatting Check
 uv run ruff format --check .
 
-# 3. Test Suite
+# 3. Test Suite (56 integration tests passing)
 $env:DATABASE_URL="sqlite:///./test.db"; $env:SECRET_KEY="test-secret"; $env:ACCESS_TOKEN_EXPIRE_MINUTES="60"; $env:JWT_ALGORITHM="HS256"; uv run python -m pytest
 ```
+
+### Integration Test Suites (`tests/integration/`)
+- [test_book.py](file:///c:/Users/muril/Projects/bookstore-tabletop-cafe/tests/integration/test_book.py): Book catalog CRUD, Open Library import, stock updates.
+- [test_game.py](file:///c:/Users/muril/Projects/bookstore-tabletop-cafe/tests/integration/test_game.py): Game catalog CRUD, genre filtering, stock handling.
+- [test_menu.py](file:///c:/Users/muril/Projects/bookstore-tabletop-cafe/tests/integration/test_menu.py): Menu item CRUD, category/tag filtering, availability toggle.
+- [test_tag.py](file:///c:/Users/muril/Projects/bookstore-tabletop-cafe/tests/integration/test_tag.py): Tag CRUD and case-insensitive uniqueness checks.
+- [test_table.py](file:///c:/Users/muril/Projects/bookstore-tabletop-cafe/tests/integration/test_table.py): Game table CRUD, table number conflict validation, public/admin authorization.
+- [test_operating_hours.py](file:///c:/Users/muril/Projects/bookstore-tabletop-cafe/tests/integration/test_operating_hours.py): Store hours list, get by day (0-6), admin upsert, non-admin permissions.
+- [test_reservation.py](file:///c:/Users/muril/Projects/bookstore-tabletop-cafe/tests/integration/test_reservation.py): Reservation creation, duration check (>=30m), same calendar day validation, store operating hours validation, table overlap prevention, game stock decrement & cancellation replenishment, customer/admin authorization.
 
 ### Local GitHub Actions Runner (`act`)
 Emulate `.github/workflows/` locally using Docker and `nektos/act`:

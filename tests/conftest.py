@@ -77,6 +77,27 @@ def admin_headers(client: TestClient, get_admin_token) -> dict[str, str]:
 
 
 @pytest.fixture
+def get_customer_token(client: TestClient) -> str:
+	"""Registers a customer user and returns the Bearer token."""
+	client.post("/auth/signup", json=CUSTOMER_DATA)
+	res = client.post(
+		"/auth/login",
+		data={
+			"username": CUSTOMER_DATA["email"],
+			"password": CUSTOMER_DATA["password"],
+		},
+	)
+	if res.status_code != HTTPStatus.OK:
+		raise Exception(f"Login failed with status {res.status_code}: {res.text}")
+	return f"Bearer {res.json()['access_token']}"
+
+
+@pytest.fixture
+def customer_headers(client: TestClient, get_customer_token) -> dict[str, str]:
+	return {"Authorization": get_customer_token}
+
+
+@pytest.fixture
 def imported_book(client: TestClient, admin_headers):
 	res = client.post(
 		f"{BOOK_ENDPOINT}/import", json=BOOK_IMPORT_BODY, headers=admin_headers
@@ -124,3 +145,14 @@ def stp_trdwn_menu_item(client: TestClient, admin_headers):
 	if res.status_code == HTTPStatus.CREATED:
 		item_id = res.json()["id"]
 		client.delete(f"{MENU_ENDPOINT}/{item_id}", headers=admin_headers)
+
+
+@pytest.fixture
+def stp_trdwn_table(client: TestClient, admin_headers):
+	res = client.post(TABLE_ENDPOINT, json=CREATE_TABLE_BODY, headers=admin_headers)
+
+	yield res
+
+	if res.status_code == HTTPStatus.CREATED:
+		table_id = res.json()["id"]
+		client.delete(f"{TABLE_ENDPOINT}/{table_id}", headers=admin_headers)
