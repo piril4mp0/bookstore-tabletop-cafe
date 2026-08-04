@@ -13,6 +13,7 @@ from app.models.game import Game  # noqa: F401
 from app.models.menu import MenuItem, menu_item_tags  # noqa: F401
 from app.models.operating_hours import OperatingHours  # noqa: F401
 from app.models.order import Order, OrderItem  # noqa: F401
+from app.models.refresh_token import RefreshToken  # noqa: F401
 from app.models.reservation import Reservation  # noqa: F401
 from app.models.table import GameTable  # noqa: F401
 from app.models.tag import Tag  # noqa: F401
