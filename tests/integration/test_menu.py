@@ -123,14 +123,13 @@ def test_update_menu_item(
 	client: TestClient, stp_trdwn_menu_item, admin_headers: dict[str, str]
 ):
 	item_id = stp_trdwn_menu_item.json()["id"]
-	update_body = {"price": 6.99, "stock": 50, "description": "Updated description"}
+	update_body = {"price": 6.99, "description": "Updated description"}
 	put_res = client.put(
 		f"{MENU_ENDPOINT}/{item_id}", json=update_body, headers=admin_headers
 	)
 	assert put_res.status_code == HTTPStatus.OK
 	updated = put_res.json()
 	assert updated["price"] == 6.99
-	assert updated["stock"] == 50
 	assert updated["description"] == "Updated description"
 
 

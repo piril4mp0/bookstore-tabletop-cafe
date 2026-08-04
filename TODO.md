@@ -3,13 +3,13 @@
 ## Authentication & Security
 - [x] Implement User system (customers and admins)
 - [ ] Implement Refresh Token flow (`/auth/refresh`, `RefreshToken` model, token rotation)
-- [ ] Implement Rate Limiting (`slowapi` or Redis) on sensitive endpoints (`/auth/login`, `/books/import`)
+- [ ] Implement Rate Limiting (Redis) on sensitive endpoints (`/auth/login`, `/books/import`)
 
 ## Models & Features
 - [x] Change `Game` model to include stock control
 - [x] Create book stock control (similar to the `Game` structure)
 - [x] Create a table reservation system for customers to schedule gaming sessions
-- [ ] Implement Cafe Order System (`Orders` and `OrderItems` for table consummation)
+- [x] Implement Cafe Order System (`Orders` and `OrderItems` for table consummation)
 - [ ] Implement Game Check-in/Check-out status tracking (in-game, returned, damaged)
 - [ ] Implement pagination & Full-Text Search / filtering for books and games catalog
 - [ ] Document all methods and classes
@@ -25,5 +25,5 @@
 
 ## DevOps, CI/CD & Documentation
 - [x] Configure GitHub Actions and a CI/CD pipeline
-- [ ] Create `Dockerfile` & `docker-compose.yml` (FastAPI + Postgres + Redis)
-- [ ] Enrich OpenAPI/Swagger documentation with field examples and error responses
+- [x] Create `Dockerfile` & `docker-compose.yml` (FastAPI + Postgres + Redis)
+- [x] Enrich OpenAPI/Swagger documentation with field examples and error responses

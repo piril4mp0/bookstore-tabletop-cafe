@@ -25,7 +25,6 @@ class MenuItem:
 	- category: Category ('drink' or 'meal').
 	- description: Description of the item.
 	- price: Price of the item.
-	- stock: Inventory stock quantity.
 	- is_available: Availability status for customers.
 	- tags: Associated Tag objects via many-to-many relationship.
 	"""
@@ -41,7 +40,6 @@ class MenuItem:
 	description: Mapped[str | None] = mapped_column(
 		String(500), nullable=True, default=None
 	)
-	stock: Mapped[int] = mapped_column(default=0, nullable=False)
 
 	is_available: Mapped[bool] = mapped_column(default=True, nullable=False)
 	tags: Mapped[list[Tag]] = relationship(
