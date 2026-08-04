@@ -112,11 +112,21 @@ Bookstore Tabletop Cafe is an async FastAPI backend system for managing a combin
   - `unit_price`: `float` (historical price snapshot)
   - `quantity`: `int` (default 1)
 
+### 10. Refresh Tokens ([app/models/refresh_token.py](file:///c:/Users/muril/Projects/bookstore-tabletop-cafe/app/models/refresh_token.py))
+- **Table**: `refresh_tokens`
+- **Fields**:
+  - `id`: Primary key (autoincrement)
+  - `token`: `str` (255 chars, unique, indexed, required)
+  - `user_id`: `int` (foreign key to `users.id`, cascade delete, indexed)
+  - `expires_at`: `datetime` (required)
+  - `revoked`: `bool` (default `false`)
+  - `created_at`: `datetime` (required)
+
 ---
 
 ## Database Migrations ([migrations/versions](file:///c:/Users/muril/Projects/bookstore-tabletop-cafe/migrations/versions))
-- **Latest Migration**: `8a2b3c4d5e6f_add_orders_and_remove_menu_stock.py`
-  - Created tables `orders` and `order_items`; dropped obsolete `stock` column from `menu_items`.
+- **Latest Migration**: `9f8e7d6c5b4a_add_refresh_tokens_table.py`
+  - Created `refresh_tokens` table with indexed token and user_id fields for DB-backed session tracking.
 
 ---
 
@@ -126,7 +136,9 @@ Bookstore Tabletop Cafe is an async FastAPI backend system for managing a combin
 | Method | Endpoint | Access | Description |
 |---|---|---|---|
 | `POST` | `/auth/signup` | Public | Register new user account (`UserCreate` -> `UserPublic`) |
-| `POST` | `/auth/login` | Public | Authenticate user & return JWT token (`OAuth2PasswordRequestForm` -> `Token`) |
+| `POST` | `/auth/login` | Public | Authenticate user & return access + refresh tokens (`OAuth2PasswordRequestForm` -> `Token`) |
+| `POST` | `/auth/refresh` | Public | Rotate refresh token and issue new token pair (`RefreshTokenRequest` -> `Token`) |
+| `POST` | `/auth/revoke` | Public | Revoke refresh token / logout session (`RefreshTokenRequest` -> `204 No Content`) |
 
 ### Book Router ([app/routers/book.py](file:///c:/Users/muril/Projects/bookstore-tabletop-cafe/app/routers/book.py)) — Prefix: `/books`
 | Method | Endpoint | Access | Description |
@@ -200,7 +212,7 @@ Bookstore Tabletop Cafe is an async FastAPI backend system for managing a combin
 ---
 
 ## Service Layer & Integrations
-- **Authentication Service**: [app/services/auth.py](file:///c:/Users/muril/Projects/bookstore-tabletop-cafe/app/services/auth.py) (password verification, token generation).
+- **Authentication Service**: [app/services/auth.py](file:///c:/Users/muril/Projects/bookstore-tabletop-cafe/app/services/auth.py) (password verification, token generation, refresh token creation, rotation, and revocation).
 - **Book Service**: [app/services/book.py](file:///c:/Users/muril/Projects/bookstore-tabletop-cafe/app/services/book.py) (CRUD operations & stock management).
 - **Game Service**: [app/services/game.py](file:///c:/Users/muril/Projects/bookstore-tabletop-cafe/app/services/game.py) (CRUD operations, genre filtering, and stock management).
 - **Tag Service**: [app/services/tag.py](file:///c:/Users/muril/Projects/bookstore-tabletop-cafe/app/services/tag.py) (Tag CRUD, multi-ID queries, and case-insensitive duplicate name validation).
@@ -227,11 +239,12 @@ uv run ruff check .
 # 2. Formatting Check
 uv run ruff format --check .
 
-# 3. Test Suite (66 integration tests passing)
+# 3. Test Suite (72 integration tests passing)
 $env:DATABASE_URL="sqlite:///./test.db"; $env:SECRET_KEY="test-secret"; $env:ACCESS_TOKEN_EXPIRE_MINUTES="60"; $env:JWT_ALGORITHM="HS256"; uv run python -m pytest
 ```
 
 ### Integration Test Suites (`tests/integration/`)
+- [test_auth.py](file:///c:/Users/muril/Projects/bookstore-tabletop-cafe/tests/integration/test_auth.py): Login token generation, refresh token rotation, token reuse rejection, expiration checks, and token revocation.
 - [test_book.py](file:///c:/Users/muril/Projects/bookstore-tabletop-cafe/tests/integration/test_book.py): Book catalog CRUD, Open Library import, stock updates.
 - [test_game.py](file:///c:/Users/muril/Projects/bookstore-tabletop-cafe/tests/integration/test_game.py): Game catalog CRUD, genre filtering, stock handling.
 - [test_menu.py](file:///c:/Users/muril/Projects/bookstore-tabletop-cafe/tests/integration/test_menu.py): Menu item CRUD, category/tag filtering, availability toggle.
